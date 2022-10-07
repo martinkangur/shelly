@@ -14,9 +14,9 @@ This should open in a new browser window with local access to Shelly's device.
  
 ## Installing Script
  
-* Click on <Scripts> button
-* Open <Libary> modular
-* Push <Configure URL> button
+* Click on **Scripts> button
+* Open **Libary** modular
+* Push **Configure URL** button
 * Paste URL `https://raw.githubusercontent.com/martinkangur/shelly/main/SHELLY_MJS.md`
 * Click on desired script
  

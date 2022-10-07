@@ -1,8 +1,9 @@
 let CONFIG = {
   api_endpoint: "https://dashboard.elering.ee/api/nps/price/ee/current",
-  switchId: 0,
-  price_limit: 200,
-  update_time: 60000,
+  switchId: 0,             // ID of the switch to control
+  price_limit: 200,        // EUR/MWh. Vat not included
+  update_time: 60000,      // 1 minute. Price update interval in milliseconds
+  reverse_switching: true  // If true, switch will be turned on when price is over the limit
 };
 
 let current_price = null;
@@ -29,6 +30,15 @@ function getCurrentPrice() {
 
 function changeSwitchState(state) {
   let state = state;
+
+  if(state === false) {
+    print("Switching off!");
+  } else if(state === true) {
+    print("Switching on!");
+  } else {
+    print("Unknown state");
+  }
+
   Shelly.call(
     "Switch.Set",
     {
@@ -58,14 +68,35 @@ Timer.set(CONFIG.update_time, true, function (userdata) {
         getCurrentPrice();
       }
 
-      //check price
-      if (current_price !== null && current_price >= CONFIG.price_limit) {
-        print("price limit reached");
-        changeSwitchState(false);
+      //check if current price is set
+      if (current_price !== null) {
+
+        //Normal switching. Turn relay off if price is over the limit
+        if(CONFIG.reverse_switching === false) {
+          if (current_price >= CONFIG.price_limit) {
+            //swith relay off if price is higher than limit
+            changeSwitchState(false);
+          } else {
+            //swith relay on if price is lower than limit
+            changeSwitchState(true);
+          }
+        }
+
+        //Reverse switching. Turn relay on if price is over the limit
+        if(CONFIG.reverse_switching === true) {
+          if (current_price >= CONFIG.price_limit) {
+            //swith relay on if price is higher than limit
+            changeSwitchState(true);
+          } else {
+            //swith relay off if price is lower than limit
+            changeSwitchState(false);
+          }
+        }
+
       } else {
-        print("price limit not reached");
-        changeSwitchState(true);
+        print("Current price is null. Waiting for price update!");
       }
+      
 
       print(current_price);
     }

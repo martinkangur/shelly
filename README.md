@@ -36,9 +36,5 @@ Will set toggling threshold for the device to 200 EUR/MWh
 ## Setting relay to switch.
 Most shelly devices have only one output(relay). If you want to change the output channel find `switchId` and set it to the desired output.
  
- 
 
- 
- 
-
-
+![logo](https://dimmer.ee/wp-content/uploads/2022/09/09-scaled.jpg)
